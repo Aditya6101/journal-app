@@ -1,4 +1,5 @@
 import { getJwtSecretKey, workos } from "@/auth";
+import { prisma } from "@/db";
 import assert from "assert";
 import { SignJWT } from "jose";
 import { cookies } from "next/headers";
@@ -7,7 +8,7 @@ import { redirect } from "next/navigation";
 
 async function register(formData: FormData) {
   "use server";
-  const data = Object.fromEntries(formData);
+  let data = Object.fromEntries(formData);
   const cookiesStore = cookies();
 
   assert.ok(typeof data.email === "string");
@@ -15,7 +16,7 @@ async function register(formData: FormData) {
   assert.ok(typeof data.lastName === "string");
   assert.ok(typeof data.password === "string");
 
-  const user = await workos.userManagement.createUser({
+  let user = await workos.userManagement.createUser({
     email: data.email,
     firstName: data.firstName,
     lastName: data.lastName,
@@ -23,7 +24,16 @@ async function register(formData: FormData) {
     emailVerified: true,
   });
 
-  const token = await new SignJWT({
+  let dbUser = await prisma.user.create({
+    data: {
+      id: user.id,
+      email: data.email,
+      firstName: data.firstName,
+      lastname: data.lastName,
+    },
+  });
+
+  let token = await new SignJWT({
     user,
   })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })

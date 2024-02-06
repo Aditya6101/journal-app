@@ -2,15 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthorizationUrl, verifyJwtToken } from "./auth";
 
 export async function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
   const { cookies } = request;
   const { value: token } = cookies.get("token") ?? { value: null };
 
+  if (url.pathname === "/login" || url.pathname === "/register")
+    return NextResponse.next();
+
   const hasVerifiedToken = token && (await verifyJwtToken(token));
 
-  // Redirect unauthenticated users to the AuthKit flow
+  // Redirect unauthenticated users to login page
   if (!hasVerifiedToken) {
-    const authorizationUrl = await getAuthorizationUrl();
-    const response = NextResponse.redirect(authorizationUrl);
+    url.pathname = "/login";
+    const response = NextResponse.redirect(url);
 
     response.cookies.delete("token");
 
@@ -20,5 +24,15 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Match against the account page
-export const config = { matcher: ["/account/:path*"] };
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
+};

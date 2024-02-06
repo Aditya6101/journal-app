@@ -1,4 +1,4 @@
-import { clearCookie, getAuthorizationUrl, getUser } from "@/auth";
+import { clearCookie, getAuthorizationUrl, getUser, workos } from "@/auth";
 
 export async function SignInButton() {
   const { isAuthenticated } = await getUser();

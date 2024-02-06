@@ -62,7 +62,7 @@ export async function getUser(): Promise<{
   if (verifiedToken) {
     return {
       isAuthenticated: true,
-      user: verifiedToken.user as User | null,
+      user: verifiedToken.user,
     };
   }
 
@@ -73,3 +73,9 @@ export async function clearCookie() {
   cookies().delete("token");
   redirect("/");
 }
+
+export const getUserId = async () => {
+  const user = await getUser();
+
+  return user.user?.id;
+};

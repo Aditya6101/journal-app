@@ -1,5 +1,6 @@
 "use server";
 
+import { getUser, getUserId, workos } from "@/auth";
 import { prisma } from "@/db";
 
 export const newEntry = () => {
@@ -10,11 +11,10 @@ export const newEntry = () => {
       category: "Learning",
       user: {
         connectOrCreate: {
-          create: { },
-          where: { id: },
+          create: workos.userManagement.getUser(getUserId()),
+          where: { id: getUserId() },
         },
       },
     },
   });
-  
 };

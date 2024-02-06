@@ -1,44 +1,46 @@
 import { getUser } from "@/auth";
-import { SignInButton } from "@/components/SignInButton";
+import Create from "@/components/CreateEntry";
 import { prisma } from "@/db";
-import { newEntry } from "@/server";
+import { format } from "date-fns/format";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 
-function getEntries(userId: string) {
-  return prisma.entry.findMany({
+async function getEntries(userId: string) {
+  let entries = await prisma.entry.findMany({
     where: { userId },
   });
+
+  return entries;
 }
 
 export default async function Home() {
-  const { user } = await getUser();
+  let { user, isAuthenticated } = await getUser();
 
-  if (!user) throw Error("Please login first");
+  if (!isAuthenticated || !user) redirect("/login");
 
-  const entries = await getEntries(user.id);
+  let entries = await getEntries(user.id);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <header>
-        <SignInButton />
-      </header>
-      {user && `Hey there, ${user.firstName}`}
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 max-w-4xl mx-auto">
+      <h2 className="text-5xl font-bold leading-8 text-neutral-50">
+        Work Journal
+      </h2>
 
-      {user && (
-        <>
-          <form action={newEntry}>
-            <button>Create Entry</button>
-          </form>
+      <Create />
 
-          {entries.map((entry) => (
-            <div key={entry.id}>
-              <h3>{entry.title}</h3>
-              <p>{entry.body}</p>
-              <pre>{entry.category}</pre>
-              <time>{new Date(entry.createdAt).getUTCDate()}</time>
-            </div>
-          ))}
-        </>
-      )}
+      <div className="w-full">
+        {entries.map((entry) => (
+          <div key={entry.id}>
+            <span className="text-base font-semibold text-blue-600">
+              {format(entry.createdAt, "do LLL, yyyy")}
+            </span>
+            <h3>{entry.title}</h3>
+            <p>{entry.body}</p>
+            <pre>{entry.category}</pre>
+            <hr />
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
