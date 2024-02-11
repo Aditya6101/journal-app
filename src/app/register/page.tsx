@@ -1,62 +1,17 @@
-import { getJwtSecretKey, workos } from "@/auth";
+"use client";
+
 import SubmitButton from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
-import { prisma } from "@/db";
-import assert from "assert";
-import { SignJWT } from "jose";
-import { cookies } from "next/headers";
+import { register } from "@/server";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-
-async function register(formData: FormData) {
-  "use server";
-  let data = Object.fromEntries(formData);
-  const cookiesStore = cookies();
-
-  assert.ok(typeof data.email === "string");
-  assert.ok(typeof data.firstName === "string");
-  assert.ok(typeof data.lastName === "string");
-  assert.ok(typeof data.password === "string");
-
-  let user = await workos.userManagement.createUser({
-    email: data.email,
-    firstName: data.firstName,
-    lastName: data.lastName,
-    password: data.password,
-    emailVerified: true,
-  });
-
-  let dbUser = await prisma.user.create({
-    data: {
-      id: user.id,
-      email: data.email,
-      firstName: data.firstName,
-      lastname: data.lastName,
-    },
-  });
-
-  let token = await new SignJWT({
-    user,
-  })
-    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-    .setIssuedAt()
-    .setExpirationTime("1h")
-    .sign(getJwtSecretKey());
-
-  cookiesStore.set({
-    name: "token",
-    value: token,
-    path: "/",
-    httpOnly: true,
-  });
-
-  return redirect("/");
-}
+import { useFormState } from "react-dom";
 
 export default function Register() {
+  const [state, formAction] = useFormState(register, { error: "" });
+
   return (
     <form
-      action={register}
+      action={formAction}
       className="flex flex-col items-center justify-center w-full pt-8"
     >
       <div className="space-y-12">
@@ -78,7 +33,7 @@ export default function Register() {
                   First Name
                 </label>
                 <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                  <Input type="text" name="firstName" id="firstName" />
+                  <Input type="text" name="firstName" id="firstName" required />
                 </div>
               </div>
 
@@ -90,7 +45,7 @@ export default function Register() {
                   Last Name
                 </label>
                 <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                  <Input type="text" name="lastName" id="lastName" />
+                  <Input type="text" name="lastName" id="lastName" required />
                 </div>
               </div>
             </div>
@@ -104,7 +59,7 @@ export default function Register() {
               </label>
 
               <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                <Input type="email" name="email" id="email" />
+                <Input type="email" name="email" id="email" required />
               </div>
             </div>
 
@@ -117,9 +72,13 @@ export default function Register() {
               </label>
 
               <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                <Input type="password" name="password" id="password" />
+                <Input type="password" name="password" id="password" required />
               </div>
             </div>
+
+            <p className="h-4 mt-3 text-sm leading-6 text-red-700">
+              {state.error}
+            </p>
 
             <div className="flex items-center justify-center w-full mt-10">
               <SubmitButton text="Register" />

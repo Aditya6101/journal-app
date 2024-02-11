@@ -60,12 +60,12 @@ export async function getUser(): Promise<{
 
   if (!token) return { isAuthenticated: false };
 
-  const { user } = await verifyJwtToken(token);
+  const verifiedToken = await verifyJwtToken(token);
 
-  if (user.user) {
+  if (verifiedToken?.user) {
     return {
       isAuthenticated: true,
-      user: user.user,
+      user: verifiedToken.user,
     };
   }
 

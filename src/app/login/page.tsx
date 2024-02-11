@@ -1,50 +1,17 @@
-import { getJwtSecretKey, workos } from "@/auth";
+"use client";
+
 import SubmitButton from "@/components/SubmitButton";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import assert from "assert";
-import { SignJWT } from "jose";
-import { cookies } from "next/headers";
+import { login } from "@/server";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-
-async function login(formData: FormData) {
-  "use server";
-  const data = Object.fromEntries(formData);
-  const cookiesStore = cookies();
-
-  assert.ok(typeof data.email === "string");
-  assert.ok(typeof data.password === "string");
-  assert.ok(typeof process.env.WORKOS_CLIENT_ID === "string");
-
-  const user = await workos.userManagement.authenticateWithPassword({
-    email: data.email,
-    password: data.password,
-    clientId: process.env.WORKOS_CLIENT_ID,
-  });
-
-  const token = await new SignJWT({
-    user,
-  })
-    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-    .setIssuedAt()
-    .setExpirationTime("1h")
-    .sign(getJwtSecretKey());
-
-  cookiesStore.set({
-    name: "token",
-    value: token,
-    path: "/",
-    httpOnly: true,
-  });
-
-  return redirect("/");
-}
+import { useFormState } from "react-dom";
 
 export default function Login() {
+  const [state, formAction] = useFormState(login, { error: "" });
+
   return (
     <form
-      action={login}
+      action={formAction}
       className="flex flex-col items-center justify-center w-full pt-8"
     >
       <div className="space-y-12">
@@ -66,7 +33,7 @@ export default function Login() {
               </label>
 
               <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                <Input type="email" name="email" id="email" />
+                <Input type="email" name="email" id="email" required />
               </div>
             </div>
 
@@ -79,9 +46,13 @@ export default function Login() {
               </label>
 
               <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                <Input type="password" name="password" id="password" />
+                <Input type="password" name="password" id="password" required />
               </div>
             </div>
+
+            <p className="h-4 mt-3 text-sm leading-6 text-red-700">
+              {state.error}
+            </p>
 
             <div className="flex items-center justify-center w-full mt-10">
               <SubmitButton text="Login" />
