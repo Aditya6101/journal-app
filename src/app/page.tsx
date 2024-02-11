@@ -21,26 +21,32 @@ export default async function Home() {
   let entries = await getEntries(user.id);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 max-w-4xl mx-auto">
-      <h2 className="text-5xl font-bold leading-8 text-neutral-50">
-        Work Journal
-      </h2>
-
+    <div>
       <Create />
 
-      <div className="w-full">
+      <div className="w-full my-8 border-t border-t-slate-700">
         {entries.map((entry) => (
-          <div key={entry.id}>
-            <span className="text-base font-semibold text-blue-600">
-              {format(entry.createdAt, "do LLL, yyyy")}
-            </span>
-            <h3>{entry.title}</h3>
-            <p>{entry.body}</p>
-            <pre>{entry.category}</pre>
-            <hr />
+          <div key={entry.id} className="py-4">
+            <div className="flex items-center justify-start gap-2 text-base font-semibold text-blue-500">
+              <div className="flex items-center justify-center w-4 h-4 border border-blue-500 rounded-full">
+                <div className="w-2 h-2 bg-blue-500 rounded-full" />
+              </div>
+
+              <p className="flex items-center justify-start gap-2 ">
+                {entry.category}
+                <time>{format(entry.createdAt, "do LLL, yyyy")}</time>
+              </p>
+            </div>
+
+            <h3 className="py-2 text-xl font-semibold text-slate-200">
+              {entry.title}
+            </h3>
+            <p className="text-base font-normal max-w-prose text-slate-300">
+              {entry.body}
+            </p>
           </div>
         ))}
       </div>
-    </main>
+    </div>
   );
 }
