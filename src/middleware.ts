@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthorizationUrl, verifyJwtToken } from "./auth";
+import { verifyJwtToken } from "./auth";
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   const { cookies } = request;
   const { value: token } = cookies.get("token") ?? { value: null };
 
-  if (url.pathname === "/login" || url.pathname === "/register")
+  if ((url.pathname === "/login" || url.pathname === "/register") && !token)
     return NextResponse.next();
 
   const hasVerifiedToken = token && (await verifyJwtToken(token));
@@ -19,6 +19,15 @@ export async function middleware(request: NextRequest) {
     response.cookies.delete("token");
 
     return response;
+  }
+
+  // If authorized user tries to access register/login page redirect to /
+  if (
+    (url.pathname === "/login" || url.pathname === "/register") &&
+    hasVerifiedToken
+  ) {
+    url.pathname = "/";
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

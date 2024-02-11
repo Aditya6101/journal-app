@@ -57,12 +57,15 @@ export async function getUser(): Promise<{
   user?: User | null;
 }> {
   const token = cookies().get("token")?.value;
-  const verifiedToken = token && (await verifyJwtToken(token));
 
-  if (verifiedToken) {
+  if (!token) return { isAuthenticated: false };
+
+  const { user } = await verifyJwtToken(token);
+
+  if (user.user) {
     return {
       isAuthenticated: true,
-      user: verifiedToken.user,
+      user: user.user,
     };
   }
 
@@ -71,7 +74,7 @@ export async function getUser(): Promise<{
 
 export async function clearCookie() {
   cookies().delete("token");
-  redirect("/");
+  redirect("/login");
 }
 
 export const getUserId = async () => {
