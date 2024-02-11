@@ -1,5 +1,5 @@
 import { getJwtSecretKey, workos } from "@/auth";
-import { Button } from "@/components/ui/button";
+import SubmitButton from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { prisma } from "@/db";
 import assert from "assert";
@@ -69,7 +69,7 @@ export default function Register() {
           </p>
 
           <div className="mt-8">
-            <div className="mt-5 flex items-center justify-between">
+            <div className="flex items-center justify-between mt-5">
               <div>
                 <label
                   htmlFor="firstName"
@@ -122,9 +122,7 @@ export default function Register() {
             </div>
 
             <div className="flex items-center justify-center w-full mt-10">
-              <Button type="submit" className="w-full bg-blue-800">
-                Register
-              </Button>
+              <SubmitButton text="Register" />
             </div>
 
             <p className="mt-5 text-sm text-center text-gray-500">

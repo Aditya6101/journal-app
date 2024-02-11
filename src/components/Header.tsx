@@ -10,7 +10,7 @@ export default async function Header() {
         isAuthenticated ? "justify-between" : "justify-center"
       }`}
     >
-      <span className="text-base font-bold tracking-wide border-b text-slate-50 border-b-blue-700">
+      <span className="text-base font-bold tracking-wide border-b-2 text-slate-50 border-b-blue-700">
         Journal App
       </span>
 

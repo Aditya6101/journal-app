@@ -1,4 +1,5 @@
 import { getJwtSecretKey, workos } from "@/auth";
+import SubmitButton from "@/components/SubmitButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import assert from "assert";
@@ -83,9 +84,7 @@ export default function Login() {
             </div>
 
             <div className="flex items-center justify-center w-full mt-10">
-              <Button type="submit" className="w-full bg-blue-800">
-                Login
-              </Button>
+              <SubmitButton text="Login" />
             </div>
 
             <p className="mt-10 text-sm text-center text-gray-500">
@@ -94,8 +93,9 @@ export default function Login() {
                 href="/register"
                 className="font-semibold leading-6 text-blue-600 hover:text-blue-500"
               >
-                Create
-              </Link>
+                Register
+              </Link>{" "}
+              to get started
             </p>
           </div>
         </div>
@@ -103,52 +103,3 @@ export default function Login() {
     </form>
   );
 }
-
-// <div>
-//           <label
-//             htmlFor="email"
-//             className="block text-base font-medium leading-6 text-slate-500"
-//           >
-//             Email
-//           </label>
-//           <div className="mt-2">
-//             <input
-//               id="email"
-//               name="email"
-//               type="email"
-//               required
-//               className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-//             />
-//           </div>
-//         </div>
-
-//         <div>
-//           <div className="flex items-center justify-between">
-//             <label
-//               htmlFor="password"
-//               className="block text-base font-medium leading-6 text-slate-500"
-//             >
-//               Password
-//             </label>
-//           </div>
-
-//           <div className="mt-2">
-//             <input
-//               id="password"
-//               name="password"
-//               type="password"
-//               autoComplete="current-password"
-//               required
-//               className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-//             />
-//           </div>
-//         </div>
-
-//         <div>
-//           <button
-//             type="submit"
-//             className="flex w-full justify-center rounded-md bg-blue-600 py-1.5 px-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-//           >
-//             Log in
-//           </button>
-//         </div>

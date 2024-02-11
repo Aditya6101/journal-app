@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Textarea } from "./ui/textarea";
+import SubmitButton from "./SubmitButton";
 
 async function createEntry(formData: FormData) {
   "use server";
@@ -67,8 +68,8 @@ export default function Create() {
             Share what you learned, experienced and enjoyed!
           </p>
 
-          <div className="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
+          <div className="w-full mt-5 space-y-5">
+            <div>
               <label
                 htmlFor="category"
                 className="block text-base font-medium leading-6 text-slate-500"
@@ -92,7 +93,7 @@ export default function Create() {
               </div>
             </div>
 
-            <div className="sm:col-span-4">
+            <div>
               <label
                 htmlFor="title"
                 className="block text-base font-medium leading-6 text-slate-500"
@@ -100,13 +101,13 @@ export default function Create() {
                 Title
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                <div className="flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                   <Input type="text" name="title" id="title" />
                 </div>
               </div>
             </div>
 
-            <div className="col-span-full">
+            <div>
               <label
                 htmlFor="body"
                 className="block text-base font-medium leading-6 text-slate-500"
@@ -124,11 +125,9 @@ export default function Create() {
         </div>
       </div>
 
-      <div className="flex items-center justify-end mt-6 gap-x-6">
-        <Button type="submit" className="bg-blue-900">
-          Save
-        </Button>
-        <Button type="button" variant={"outline"}>
+      <div className="flex flex-col items-center justify-end gap-3">
+        <SubmitButton text="Create Entry" />
+        <Button type="reset" variant={"outline"} className="w-full">
           Cancel
         </Button>
       </div>

@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 async function getEntries(userId: string) {
   let entries = await prisma.entry.findMany({
     where: { userId },
+    orderBy: { createdAt: "desc" },
   });
 
   return entries;
@@ -33,7 +34,7 @@ export default async function Home() {
               </div>
 
               <p className="flex items-center justify-start gap-2 ">
-                {entry.category}
+                {entry.category} -
                 <time>{format(entry.createdAt, "do LLL, yyyy")}</time>
               </p>
             </div>
