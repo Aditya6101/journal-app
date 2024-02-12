@@ -1,8 +1,5 @@
-import { getUser } from "@/auth";
-import { prisma } from "@/db";
-import { Category } from "@prisma/client";
-import assert from "assert";
-import { revalidatePath } from "next/cache";
+import { createEntry } from "@/server";
+import SubmitButton from "./SubmitButton";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -14,49 +11,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Textarea } from "./ui/textarea";
-import SubmitButton from "./SubmitButton";
 
-async function createEntry(formData: FormData) {
-  "use server";
-  let data = Object.fromEntries(formData);
-
-  assert.ok(typeof data.title === "string");
-  assert.ok(typeof data.body === "string");
-  assert.ok(
-    data.category === "Work" ||
-      data.category === "Learning" ||
-      data.category === "Interesting" ||
-      data.category === "Personal"
-  );
-
-  let title = data.title;
-  let body = data.body;
-  let category: Category = data.category;
-  let { user, isAuthenticated } = await getUser();
-
-  if (!user || !isAuthenticated) throw new Error("User not found");
-
-  let { firstName, email } = user;
-
-  firstName = firstName || "";
-
-  await prisma.entry.create({
-    data: {
-      title,
-      body,
-      category,
-      user: {
-        connect: {
-          email,
-        },
-      },
-    },
-  });
-
-  return revalidatePath("/");
-}
-
-export default function Create() {
+export default function EntryForm() {
   return (
     <form action={createEntry} className="w-full pt-8">
       <div className="space-y-12">

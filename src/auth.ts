@@ -45,7 +45,7 @@ export function getJwtSecretKey() {
 
 export async function verifyJwtToken(token: string) {
   try {
-    const { payload } = await jwtVerify(token, getJwtSecretKey());
+    let { payload } = await jwtVerify(token, getJwtSecretKey());
     return payload;
   } catch (error) {
     return null;
@@ -56,11 +56,11 @@ export async function getUser(): Promise<{
   isAuthenticated: boolean;
   user?: User | null;
 }> {
-  const token = cookies().get("token")?.value;
+  let token = cookies().get("token")?.value;
 
   if (!token) return { isAuthenticated: false };
 
-  const verifiedToken = await verifyJwtToken(token);
+  let verifiedToken = await verifyJwtToken(token);
 
   if (verifiedToken?.user) {
     return {

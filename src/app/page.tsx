@@ -1,29 +1,15 @@
-import { getUser } from "@/auth";
-import Create from "@/components/CreateEntry";
-import { prisma } from "@/db";
+import EntryForm from "@/components/EntryForm";
+import { Button } from "@/components/ui/button";
+import { deleteEntry, getEntries } from "@/server";
 import { format } from "date-fns/format";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-
-async function getEntries(userId: string) {
-  let entries = await prisma.entry.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-  });
-
-  return entries;
-}
+import { Trash } from "lucide-react";
 
 export default async function Home() {
-  let { user, isAuthenticated } = await getUser();
-
-  if (!isAuthenticated || !user) redirect("/login");
-
-  let entries = await getEntries(user.id);
+  let entries = await getEntries();
 
   return (
     <div>
-      <Create />
+      <EntryForm />
 
       <div className="w-full my-8 border-t border-t-slate-700">
         {entries.map((entry) => (
@@ -33,10 +19,17 @@ export default async function Home() {
                 <div className="w-2 h-2 bg-blue-500 rounded-full" />
               </div>
 
-              <p className="flex items-center justify-start gap-2 ">
+              <p className="flex items-center justify-start gap-2 grow">
                 {entry.category} -
                 <time>{format(entry.createdAt, "do LLL, yyyy")}</time>
               </p>
+
+              <form action={deleteEntry}>
+                <input type="hidden" name="id" value={entry.id} />
+                <Button variant="ghost" size="icon">
+                  <Trash className="w-4 h-4" />
+                </Button>
+              </form>
             </div>
 
             <h3 className="py-2 text-xl font-semibold text-slate-200">

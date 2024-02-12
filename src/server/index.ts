@@ -1,9 +1,11 @@
 "use server";
 
-import { getJwtSecretKey, getUserId, workos } from "@/auth";
+import { getJwtSecretKey, getUser, workos } from "@/auth";
 import { prisma } from "@/db";
+import { Category } from "@prisma/client";
 import assert from "assert";
 import { SignJWT } from "jose";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -82,7 +84,7 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   const token = await new SignJWT({
-    user,
+    user: user.user,
   })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
     .setIssuedAt()
@@ -100,18 +102,66 @@ export async function login(prevState: any, formData: FormData) {
 }
 
 // ENTRIES
-export const newEntry = () => {
-  const entry = prisma.entry.create({
+export async function getEntries() {
+  let { user } = await getUser();
+
+  let entries = await prisma.entry.findMany({
+    where: { userId: user?.id },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return entries;
+}
+
+export async function createEntry(formData: FormData) {
+  "use server";
+  let data = Object.fromEntries(formData);
+
+  assert.ok(typeof data.title === "string");
+  assert.ok(typeof data.body === "string");
+  assert.ok(
+    data.category === "Work" ||
+      data.category === "Learning" ||
+      data.category === "Interesting" ||
+      data.category === "Personal"
+  );
+
+  let title = data.title;
+  let body = data.body;
+  let category: Category = data.category;
+  let { user } = await getUser();
+
+  if (!user) return { error: "User not found" };
+
+  let { firstName, email } = user;
+
+  firstName = firstName || "";
+
+  await prisma.entry.create({
     data: {
-      title: "My first entry!",
-      body: "I am learning RSC today",
-      category: "Learning",
+      title,
+      body,
+      category,
       user: {
-        connectOrCreate: {
-          create: workos.userManagement.getUser(getUserId()),
-          where: { id: getUserId() },
+        connect: {
+          email,
         },
       },
     },
   });
-};
+
+  return revalidatePath("/");
+}
+
+export async function deleteEntry(formData: FormData) {
+  let data = Object.fromEntries(formData);
+  let { user } = await getUser();
+
+  assert.ok(typeof data.id === "string");
+
+  await prisma.entry.delete({
+    where: { id: data.id, userId: user?.id },
+  });
+
+  return revalidatePath("/");
+}
