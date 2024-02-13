@@ -38,7 +38,7 @@ export async function register(prevState: any, formData: FormData) {
         lastname: data.lastName,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     return {
       error: error?.message || "Something went wrong, Please try again",
     };
@@ -71,15 +71,16 @@ export async function login(prevState: any, formData: FormData) {
   assert.ok(typeof process.env.WORKOS_CLIENT_ID === "string");
 
   let user;
+
   try {
     user = await workos.userManagement.authenticateWithPassword({
       email: data.email,
       password: data.password,
       clientId: process.env.WORKOS_CLIENT_ID,
     });
-  } catch (error) {
+  } catch (error: any) {
     return {
-      error: error?.rawData?.message || "Please enter valid credentials",
+      error: error?.rawData?.message ?? "Please enter valid credentials",
     };
   }
 

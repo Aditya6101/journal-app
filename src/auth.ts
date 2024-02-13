@@ -65,7 +65,7 @@ export async function getUser(): Promise<{
   if (verifiedToken?.user) {
     return {
       isAuthenticated: true,
-      user: verifiedToken.user,
+      user: verifiedToken.user as User,
     };
   }
 
