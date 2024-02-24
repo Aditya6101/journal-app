@@ -33,7 +33,7 @@ export default function EntryForm() {
                 Category
               </label>
               <div className="mt-2">
-                <Select name="category">
+                <Select name="category" required>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
@@ -56,11 +56,7 @@ export default function EntryForm() {
               >
                 Title
               </label>
-              <div className="mt-2">
-                <div className="flex w-full rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                  <Input type="text" name="title" id="title" />
-                </div>
-              </div>
+              <Input type="text" name="title" id="title" className="mt-2" />
             </div>
 
             <div>
@@ -70,9 +66,7 @@ export default function EntryForm() {
               >
                 Description
               </label>
-              <div className="mt-2">
-                <Textarea id="body" name="body" rows={5} />
-              </div>
+              <Textarea id="body" name="body" rows={5} className="mt-2" />
               <p className="mt-3 text-sm leading-6 text-slate-500">
                 Write a few sentences about how was it
               </p>

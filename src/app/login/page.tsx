@@ -32,9 +32,13 @@ export default function Login() {
                 Email Address
               </label>
 
-              <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                <Input type="email" name="email" id="email" required />
-              </div>
+              <Input
+                type="email"
+                name="email"
+                id="email"
+                required
+                className="mt-2"
+              />
             </div>
 
             <div className="mt-5">
@@ -45,9 +49,13 @@ export default function Login() {
                 Password
               </label>
 
-              <div className="flex w-full mt-2 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600">
-                <Input type="password" name="password" id="password" required />
-              </div>
+              <Input
+                type="password"
+                name="password"
+                id="password"
+                required
+                className="mt-2"
+              />
             </div>
 
             <p className="h-4 mt-3 text-sm leading-6 text-red-700">
