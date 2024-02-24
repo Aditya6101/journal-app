@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Journal App
+
+Welcome to the [Journal App!](https://journal-app-rho-woad.vercel.app/) This is a web application allows users to create and manage their personal journal entries.
+
+## Features
+
+- **User Authentication:** Users can sign up, log in, and securely manage their journal entries.
+- **Create Entries:** Create/Delete your journal entries.
+- **Date-based Entries:** Entries are organized by date for easy navigation and reflection.
+- **Design:** Enjoy a simple, clean and slate-blue color themed UI.
+
+## Planned Features
+
+- **User Authentication:** Improvement in creds validation.
+- **Entries:** Edit entry feature and implementation of Optimistic UI pattern.
+- **Design:** Responsive UI for smaller screens.
+
+## Tech Stack
+
+- NextJS w/ Typescript
+- Clerk Auth
+- Supabase Postgres
+- Prisma
+- Shadcn/ui 
+- Tailwindcss
 
 ## Getting Started
 
-First, run the development server:
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Node.js and npm installed on your machine.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone the repository:
 
-## Learn More
+    ```bash
+    git clone https://github.com/Aditya6101/journal-app.git
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Navigate to the project directory:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    ```bash
+    cd journal-app
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. Install dependencies:
 
-## Deploy on Vercel
+    ```bash
+    npm install
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Start the development server:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    ```bash
+    npm start
+    ```
+
+5. Open your browser and visit `http://localhost:3000` to view the app.
+
+Happy Journaling!
