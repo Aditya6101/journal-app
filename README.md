@@ -55,7 +55,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 4. Start the development server:
 
     ```bash
-    npm start
+    npm run dev
     ```
 
 5. Open your browser and visit `http://localhost:3000` to view the app.
