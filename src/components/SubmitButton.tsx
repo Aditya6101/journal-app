@@ -2,13 +2,30 @@
 import { Loader2 } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { Button } from "./ui/button";
+import type { ReactNode } from "react";
 
 type Props = {
   text?: string;
+  icon?: ReactNode
 };
 
-export default function SubmitButton({ text = "Submit" }: Props) {
+export default function SubmitButton({ text = "Submit", icon }: Props) {
   let { pending } = useFormStatus();
+
+  if (icon) {
+    return (
+      <Button
+        type="submit"
+        variant="ghost"
+        size="icon"
+        aria-disabled={pending}
+        disabled={pending}
+      >
+        {pending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+        {!pending && icon}
+      </Button>
+    )
+  }
 
   return (
     <Button
@@ -17,7 +34,7 @@ export default function SubmitButton({ text = "Submit" }: Props) {
       aria-disabled={pending}
       disabled={pending}
     >
-      {pending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+      {!icon && pending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
       {text}
     </Button>
   );
