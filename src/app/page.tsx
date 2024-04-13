@@ -1,9 +1,6 @@
 import Entries from "@/components/Entries";
 import EntryForm from "@/components/EntryForm";
-import { Button } from "@/components/ui/button";
-import { deleteEntry, getEntries } from "@/server";
-import { format } from "date-fns/format";
-import { Trash } from "lucide-react";
+import { getEntries } from "@/server";
 
 export default async function Home() {
   let entries = await getEntries();
