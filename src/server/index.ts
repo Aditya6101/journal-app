@@ -2,7 +2,7 @@
 
 import { getJwtSecretKey, getUser, workos } from "@/auth";
 import { prisma } from "@/db";
-import { Category } from "@prisma/client";
+import { Category, Entry } from "@prisma/client";
 import assert from "assert";
 import { SignJWT } from "jose";
 import { revalidatePath } from "next/cache";
@@ -108,10 +108,20 @@ export async function getEntries() {
 
   let entries = await prisma.entry.findMany({
     where: { userId: user?.id },
-    orderBy: { createdAt: "desc" },
+    orderBy: { updatedAt: "desc" },
   });
 
   return entries;
+}
+
+export async function getEntry(id: string) {
+  let { user } = await getUser();
+
+  let entry = await prisma.entry.findFirstOrThrow({
+    where: { userId: user?.id, id },
+  });
+
+  return entry;
 }
 
 export async function createEntry(formData: FormData) {
@@ -148,6 +158,44 @@ export async function createEntry(formData: FormData) {
           email,
         },
       },
+    },
+  });
+
+  return revalidatePath("/");
+}
+
+export async function updateEntry({
+  id,
+  formData,
+}: {
+  id: string;
+  formData: FormData;
+}) {
+  "use server";
+  let data = Object.fromEntries(formData);
+
+  assert.ok(typeof data.title === "string");
+  assert.ok(typeof data.body === "string");
+  assert.ok(
+    data.category === "Work" ||
+      data.category === "Learning" ||
+      data.category === "Interesting" ||
+      data.category === "Personal"
+  );
+
+  let title = data.title;
+  let body = data.body;
+  let category: Category = data.category;
+  let { user } = await getUser();
+
+  if (!user) return { error: "User not found" };
+
+  await prisma.entry.update({
+    where: { id },
+    data: {
+      title,
+      body,
+      category,
     },
   });
 
