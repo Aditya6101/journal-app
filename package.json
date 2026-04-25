@@ -12,7 +12,7 @@
     "@prisma/client": "^5.8.1",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
-    "@workos-inc/node": "^5.1.4",
+    "@workos-inc/node": "^9.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
